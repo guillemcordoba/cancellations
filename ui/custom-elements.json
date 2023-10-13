@@ -1,0 +1,634 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/cancellations-client.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationsClient",
+          "members": [
+            {
+              "kind": "method",
+              "name": "createCancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<EntryRecord<Cancellation>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancelledHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                },
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Cancellation"
+            },
+            {
+              "kind": "method",
+              "name": "getCancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<EntryRecord<Cancellation> | undefined>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancellationHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "deleteCancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<ActionHash>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "originalCancellationHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateCancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<EntryRecord<Cancellation>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "previousCancellationHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                },
+                {
+                  "name": "updatedCancellation",
+                  "type": {
+                    "text": "Cancellation"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getCancellationsFor",
+              "return": {
+                "type": {
+                  "text": "Promise<Array<ActionHash>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "actionHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "ZomeClient",
+            "package": "@holochain-open-dev/utils"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationsClient",
+          "declaration": {
+            "name": "CancellationsClient",
+            "module": "src/cancellations-client.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/cancellations-store.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationsStore",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancellationsFor",
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(\n      async () => this.client.getCancellationsFor(cancelledHash),\n      4000\n    )\n  )"
+            },
+            {
+              "kind": "field",
+              "name": "cancellations",
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(\n      async () => this.client.getCancellation(cancelledHash),\n      4000\n    )\n  )"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationsStore",
+          "declaration": {
+            "name": "CancellationsStore",
+            "module": "src/cancellations-store.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cancellationsStoreContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cancellationsStoreContext",
+          "declaration": {
+            "name": "cancellationsStoreContext",
+            "module": "src/context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./cancellations-store"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./cancellations-client"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./context"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./types"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/mocks.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationsZomeMock",
+          "superclass": {
+            "name": "ZomeMock",
+            "package": "@holochain-open-dev/utils"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationsZomeMock",
+          "declaration": {
+            "name": "CancellationsZomeMock",
+            "module": "src/mocks.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/cancellation-detail.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationDetail",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "attribute": "cancellationHash"
+            },
+            {
+              "kind": "method",
+              "name": "deleteCancellation"
+            },
+            {
+              "kind": "method",
+              "name": "renderDetail",
+              "parameters": [
+                {
+                  "name": "entryRecord",
+                  "type": {
+                    "text": "EntryRecord<Cancellation>"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "cancellation-deleted",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "detail will contain { cancellationHash }",
+              "name": "cancellation-deleted:"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "fieldName": "cancellationHash"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "cancellation-detail",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationDetail",
+          "declaration": {
+            "name": "CancellationDetail",
+            "module": "src/elements/cancellation-detail.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cancellation-detail",
+          "declaration": {
+            "name": "CancellationDetail",
+            "module": "src/elements/cancellation-detail.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/cancellation-summary.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationSummary",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "attribute": "cancellationHash"
+            },
+            {
+              "kind": "method",
+              "name": "renderSummary",
+              "parameters": [
+                {
+                  "name": "entryRecord",
+                  "type": {
+                    "text": "EntryRecord<Cancellation>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderCancellation"
+            }
+          ],
+          "events": [
+            {
+              "name": "cancellation-selected",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "detail will contain { cancellationHash }",
+              "name": "cancellation-selected:"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "fieldName": "cancellationHash"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "cancellation-summary",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationSummary",
+          "declaration": {
+            "name": "CancellationSummary",
+            "module": "src/elements/cancellation-summary.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cancellation-summary",
+          "declaration": {
+            "name": "CancellationSummary",
+            "module": "src/elements/cancellation-summary.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/cancellations-context.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationsContext",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "CancellationsStore"
+              },
+              "attribute": "store"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "CancellationsStore"
+              },
+              "fieldName": "store"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "cancellations-context",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationsContext",
+          "declaration": {
+            "name": "CancellationsContext",
+            "module": "src/elements/cancellations-context.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cancellations-context",
+          "declaration": {
+            "name": "CancellationsContext",
+            "module": "src/elements/cancellations-context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/create-cancellation.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CreateCancellation",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancellationsHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "attribute": "cancellationsHash"
+            },
+            {
+              "kind": "method",
+              "name": "createCancellation",
+              "parameters": [
+                {
+                  "name": "fields",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "cancellation-created",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "detail will contain { cancellationHash }",
+              "name": "cancellation-created:"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cancellationsHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "fieldName": "cancellationsHash"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "create-cancellation",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CreateCancellation",
+          "declaration": {
+            "name": "CreateCancellation",
+            "module": "src/elements/create-cancellation.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "create-cancellation",
+          "declaration": {
+            "name": "CreateCancellation",
+            "module": "src/elements/create-cancellation.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/edit-cancellation.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "EditCancellation",
+          "members": [
+            {
+              "kind": "field",
+              "name": "currentRecord",
+              "type": {
+                "text": "EntryRecord<Cancellation>"
+              },
+              "attribute": "currentRecord"
+            },
+            {
+              "kind": "method",
+              "name": "updateCancellation",
+              "parameters": [
+                {
+                  "name": "fields",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "cancellation-updated",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "edit-canceled",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "detail will contain { previousCancellationHash, updatedCancellationHash }",
+              "name": "cancellation-updated:"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "currentRecord",
+              "type": {
+                "text": "EntryRecord<Cancellation>"
+              },
+              "fieldName": "currentRecord"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "edit-cancellation",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "EditCancellation",
+          "declaration": {
+            "name": "EditCancellation",
+            "module": "src/elements/edit-cancellation.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "edit-cancellation",
+          "declaration": {
+            "name": "EditCancellation",
+            "module": "src/elements/edit-cancellation.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
