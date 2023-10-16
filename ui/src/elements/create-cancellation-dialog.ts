@@ -100,6 +100,7 @@ export class CreateCancellation extends LitElement {
       );
 
       this.form.reset();
+      this.dialog.hide();
     } catch (e: any) {
       console.error(e);
       notifyError(msg('Error creating the cancellation'));
@@ -126,7 +127,7 @@ export class CreateCancellation extends LitElement {
       <sl-button
         slot="footer"
         form="create-form"
-        variant="primary"
+        variant="danger"
         type="submit"
         .loading=${this.committing}
         >${this.label}</sl-button

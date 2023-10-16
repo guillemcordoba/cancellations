@@ -102,11 +102,11 @@ export class CancellationsZomeMock extends ZomeMock implements AppAgentClient {
     return record;
   }
 
-  async get_cancellations_for_testesst(
-    testesstHash: ActionHash
+  async get_cancellations_for(
+    cancelledHash: ActionHash
   ): Promise<Array<Record>> {
     const actionHashes: ActionHash[] =
-      this.cancellationsFor.get(testesstHash) || [];
+      this.cancellationsFor.get(cancelledHash) || [];
 
     return actionHashes
       .map(actionHash => this.cancellation.entryRecord(actionHash)?.record)

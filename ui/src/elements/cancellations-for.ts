@@ -18,12 +18,11 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 import { CancellationsStore } from '../cancellations-store.js';
 import { cancellationsStoreContext } from '../context.js';
-import { Cancellation } from '../types.js';
 
-import './cancellation-summary.js';
+import './cancellation-detail.js';
 
 /**
- * @element cancellations-for-testesst
+ * @element cancellations-for
  */
 @localized()
 @customElement('cancellations-for')
@@ -31,6 +30,14 @@ export class CancellationsFor extends LitElement {
   // REQUIRED. The CancelledHash for which the Cancellations should be fetched
   @property(hashProperty('cancelled-hash'))
   cancelledHash!: ActionHash;
+
+  // Label to put as the cancellation notice
+  @property()
+  label: string = msg('was cancelled');
+
+  // Label to put as the cancellation notice
+  @property({ attribute: 'hide-no-cancellations-notice' })
+  hideNoCancellationsNotice: boolean = false;
 
   /**
    * @internal
@@ -46,24 +53,25 @@ export class CancellationsFor extends LitElement {
   );
 
   renderList(hashes: Array<ActionHash>) {
-    if (hashes.length === 0)
+    if (hashes.length === 0) {
+      if (this.hideNoCancellationsNotice) return html``;
       return html` <div class="column center-content">
         <sl-icon
           style="color: grey; height: 64px; width: 64px; margin-bottom: 16px"
           .src=${wrapPathInSvg(mdiInformationOutline)}
         ></sl-icon>
-        <span class="placeholder"
-          >${msg('No cancellations found for this testesst')}</span
-        >
+        <span class="placeholder">${msg('No cancellations found')}</span>
       </div>`;
+    }
 
     return html`
       <div style="display: flex; flex-direction: column">
         ${hashes.map(
           hash =>
-            html`<cancellation-summary
+            html`<cancellation-detail
+              .label=${this.label}
               .cancellationHash=${hash}
-            ></cancellation-summary>`
+            ></cancellation-detail>`
         )}
       </div>
     `;
@@ -72,15 +80,12 @@ export class CancellationsFor extends LitElement {
   render() {
     switch (this._cancellations.value.status) {
       case 'pending':
-        return html`<div
-          style="display: flex; flex: 1; align-items: center; justify-content: center"
-        >
-          <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`;
+        return html` <!-- TODO: what to put here? --> `;
       case 'complete':
         return this.renderList(this._cancellations.value.value);
       case 'error':
         return html`<display-error
+          tooltip
           .headline=${msg('Error fetching the cancellations')}
           .error=${this._cancellations.value.error.data.data}
         ></display-error>`;

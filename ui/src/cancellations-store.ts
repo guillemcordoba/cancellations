@@ -10,6 +10,11 @@ import {
 
 import { CancellationsClient } from './cancellations-client.js';
 
+export function throwIfUndefined<T>(object: T | undefined): T {
+  if (object === undefined || object === null) throw new Error('Not found');
+  return object;
+}
+
 export class CancellationsStore {
   constructor(public client: CancellationsClient) {}
 
@@ -21,9 +26,9 @@ export class CancellationsStore {
   );
 
   cancellations = new LazyHoloHashMap((cancelledHash: ActionHash) =>
-    lazyLoadAndPoll(
-      async () => this.client.getCancellation(cancelledHash),
-      4000
-    )
+    lazyLoadAndPoll(async () => {
+      const c = await this.client.getCancellation(cancelledHash);
+      return throwIfUndefined(c);
+    }, 4000)
   );
 }

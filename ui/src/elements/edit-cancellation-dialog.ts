@@ -14,24 +14,28 @@ import { mdiAlertCircleOutline, mdiDelete } from '@mdi/js';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/card/card.js';
+import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
 import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import { CancellationsStore } from '../cancellations-store.js';
 import { cancellationsStoreContext } from '../context.js';
 import { Cancellation } from '../types.js';
+import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 
 /**
- * @element edit-cancellation
+ * @element edit-cancellation-dialog
  * @fires cancellation-updated: detail will contain { previousCancellationHash, updatedCancellationHash }
  */
 @localized()
-@customElement('edit-cancellation')
-export class EditCancellation extends LitElement {
+@customElement('edit-cancellation-dialog')
+export class EditCancellationDialog extends LitElement {
+  @property()
+  cancellationHash!: ActionHash;
+
   // REQUIRED. The current Cancellation record that should be updated
   @property()
   currentRecord!: EntryRecord<Cancellation>;
@@ -47,6 +51,16 @@ export class EditCancellation extends LitElement {
    */
   @state()
   committing = false;
+
+  /**
+   * @internal
+   */
+  @query('sl-dialog')
+  dialog!: SlDialog;
+
+  show() {
+    this.dialog.show();
+  }
 
   firstUpdated() {
     this.shadowRoot?.querySelector('form')!.reset();
@@ -71,6 +85,7 @@ export class EditCancellation extends LitElement {
           },
         })
       );
+      this.dialog.hide();
     } catch (e: any) {
       console.error(e);
       notifyError(msg('Error updating the cancellation'));
@@ -80,44 +95,29 @@ export class EditCancellation extends LitElement {
   }
 
   render() {
-    return html` <sl-card>
-      <span slot="header">${msg('Edit Cancellation')}</span>
-
+    return html` <sl-dialog .label=${msg('Edit Cancellation Reason')}>
       <form
-        style="display: flex; flex: 1; flex-direction: column;"
+        id="edit-cancellation"
+        class="column"
+        style="flex: 1; gap: 16px;"
         ${onSubmit(fields => this.updateCancellation(fields))}
       >
-        <div style="margin-bottom: 16px">
-          <sl-textarea
-            name="reason"
-            .label=${msg('Reason')}
-            required
-            .defaultValue=${this.currentRecord.entry.reason}
-          ></sl-textarea>
-        </div>
-
-        <div style="display: flex; flex-direction: row">
-          <sl-button
-            @click=${() =>
-              this.dispatchEvent(
-                new CustomEvent('edit-canceled', {
-                  bubbles: true,
-                  composed: true,
-                })
-              )}
-            style="flex: 1;"
-            >${msg('Cancel')}</sl-button
-          >
-          <sl-button
-            type="submit"
-            variant="primary"
-            style="flex: 1;"
-            .loading=${this.committing}
-            >${msg('Save')}</sl-button
-          >
-        </div>
+        <sl-textarea
+          name="reason"
+          .label=${msg('Reason')}
+          required
+          .defaultValue=${this.currentRecord.entry.reason}
+        ></sl-textarea>
       </form>
-    </sl-card>`;
+      <sl-button
+        slot="footer"
+        form="edit-cancellation"
+        type="submit"
+        variant="primary"
+        .loading=${this.committing}
+        >${msg('Save reason')}</sl-button
+      >
+    </sl-dialog>`;
   }
 
   static styles = [sharedStyles];

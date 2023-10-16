@@ -69,31 +69,54 @@
         }
 
         async initStores(appAgentClient) {
-          const profilesStore = new ProfilesStore(
+          this.profilesStore = new ProfilesStore(
             new ProfilesClient(appAgentClient, 'cancellations_test')
           );
-          new ContextProvider(this, profilesStoreContext, profilesStore);
+          new ContextProvider(this, profilesStoreContext, this.profilesStore);
 
           this._cancellationsStore = new CancellationsStore(
             new CancellationsClient(appAgentClient, 'cancellations_test')
           );
+
+          await this.loadProfileActionHash();
         }
 
         renderContent() {
+          if (!this.profileHash) return html``;
           return html`
             <cancellations-context .store=${this._cancellationsStore}>
               <create-cancellation-dialog
+                label="Cancel profile"
+                warning="You sure sure about this?"
                 .cancelledHash=${this.profileHash}
               ></create-cancellation-dialog>
               <sl-button
                 @click=${() =>
-                  this.querySelector('create-cancellation-dialog').show()}
-              ></sl-button>
+                  this.shadowRoot
+                    .querySelector('create-cancellation-dialog')
+                    .show()}
+                >Cancel</sl-button
+              >
               <cancellations-for
+                label="Event was cancelled"
                 .cancelledHash=${this.profileHash}
               ></cancellations-for>
             </cancellations-context>
           `;
+        }
+
+        async loadProfileActionHash() {
+          const agents = await this.profilesStore.client.callZome(
+            'get_agents_with_profile',
+            undefined
+          );
+          const p = await this.profilesStore.client.callZome(
+            'get_agent_profile',
+            agents[0]
+          );
+
+          this.profileHash = p?.signed_action.hashed.hash;
+          this.requestUpdate();
         }
 
         render() {
@@ -109,9 +132,7 @@
             <div class="fill row" style="width: 100vw; height: 100%;">
               <profile-prompt
                 style="flex: 1;"
-                @profile-created=${e => {
-                  this.profileHash = e.detail.profileHash;
-                }}
+                @profile-created=${() => this.loadProfileActionHash()}
               >
                 ${this.renderContent()}
               </profile-prompt>

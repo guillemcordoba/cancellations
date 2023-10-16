@@ -1,9 +1,9 @@
 import { assert, test } from 'vitest';
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { ActionHash, Record } from '@holochain/client';
+import { ActionHash, Record, fakeActionHash } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
-import { EntryRecord, fakeActionHash } from '@holochain-open-dev/utils';
+import { EntryRecord } from '@holochain-open-dev/utils';
 import { cleanNodeDecoding } from '@holochain-open-dev/utils/dist/clean-node-decoding.js';
 import { toPromise } from '@holochain-open-dev/stores';
 
@@ -18,7 +18,7 @@ test('create Cancellation', async () => {
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
       await alice.store.client.createCancellation(
-        fakeActionHash(),
+        await fakeActionHash(),
         'Lorem ipsum 2'
       );
     assert.ok(cancellation);
@@ -34,7 +34,7 @@ test('create and read Cancellation', async () => {
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
       await alice.store.client.createCancellation(
-        fakeActionHash(),
+        await fakeActionHash(),
         'Lorem ipsum 2'
       );
     assert.ok(cancellation);
@@ -57,7 +57,7 @@ test('create and update Cancellation', async () => {
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
       await alice.store.client.createCancellation(
-        fakeActionHash(),
+        await fakeActionHash(),
         'Lorem ipsum 2'
       );
     assert.ok(cancellation);
@@ -106,7 +106,7 @@ test('create and delete Cancellation', async () => {
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
       await alice.store.client.createCancellation(
-        fakeActionHash(),
+        await fakeActionHash(),
         'Lorem ipsum 2'
       );
     assert.ok(cancellation);
