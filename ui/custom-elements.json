@@ -54,7 +54,7 @@
             },
             {
               "kind": "method",
-              "name": "deleteCancellation",
+              "name": "undoCancellation",
               "return": {
                 "type": {
                   "text": "Promise<ActionHash>"
@@ -62,7 +62,7 @@
               },
               "parameters": [
                 {
-                  "name": "originalCancellationHash",
+                  "name": "cancellationHash",
                   "type": {
                     "text": "ActionHash"
                   }
@@ -71,7 +71,7 @@
             },
             {
               "kind": "method",
-              "name": "updateCancellation",
+              "name": "updateCancellationReason",
               "return": {
                 "type": {
                   "text": "Promise<EntryRecord<Cancellation>>"
@@ -85,9 +85,9 @@
                   }
                 },
                 {
-                  "name": "updatedCancellation",
+                  "name": "reason",
                   "type": {
-                    "text": "Cancellation"
+                    "text": "string"
                   }
                 }
               ]
@@ -132,6 +132,23 @@
       "path": "src/cancellations-store.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "throwIfUndefined",
+          "return": {
+            "type": {
+              "text": "T"
+            }
+          },
+          "parameters": [
+            {
+              "name": "object",
+              "type": {
+                "text": "T | undefined"
+              }
+            }
+          ]
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "CancellationsStore",
@@ -144,12 +161,20 @@
             {
               "kind": "field",
               "name": "cancellations",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(\n      async () => this.client.getCancellation(cancelledHash),\n      4000\n    )\n  )"
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(async () => {\n      const c = await this.client.getCancellation(cancelledHash);\n      return throwIfUndefined(c);\n    }, 4000)\n  )"
             }
           ]
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "throwIfUndefined",
+          "declaration": {
+            "name": "throwIfUndefined",
+            "module": "src/cancellations-store.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "CancellationsStore",
@@ -227,10 +252,126 @@
           "kind": "class",
           "description": "",
           "name": "CancellationsZomeMock",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancellation",
+              "default": "new RecordBag<Cancellation>()",
+              "description": "Cancellation"
+            },
+            {
+              "kind": "field",
+              "name": "cancellationsFor",
+              "default": "new HoloHashMap<ActionHash, ActionHash[]>()"
+            },
+            {
+              "kind": "method",
+              "name": "create_cancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<Record>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancellation",
+                  "type": {
+                    "text": "Cancellation"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get_cancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<Record | undefined>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancellationHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "undo_cancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<ActionHash>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "original_cancellation_hash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "update_cancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<Record>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "{\n    previous_cancellation_hash: ActionHash;\n    updated_cancellation: Cancellation;\n  }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get_cancellations_for",
+              "return": {
+                "type": {
+                  "text": "Promise<Array<Record>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancelledHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            }
+          ],
           "superclass": {
             "name": "ZomeMock",
             "package": "@holochain-open-dev/utils"
           }
+        },
+        {
+          "kind": "function",
+          "name": "sampleCancellation",
+          "return": {
+            "type": {
+              "text": "Promise<Cancellation>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "partialCancellation",
+              "default": "{}",
+              "type": {
+                "text": "Partial<Cancellation>"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -239,6 +380,14 @@
           "name": "CancellationsZomeMock",
           "declaration": {
             "name": "CancellationsZomeMock",
+            "module": "src/mocks.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sampleCancellation",
+          "declaration": {
+            "name": "sampleCancellation",
             "module": "src/mocks.ts"
           }
         }
@@ -268,15 +417,27 @@
               "attribute": "cancellationHash"
             },
             {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "label"
+            },
+            {
               "kind": "method",
               "name": "deleteCancellation"
+            },
+            {
+              "kind": "method",
+              "name": "renderDeletingDialog"
             },
             {
               "kind": "method",
               "name": "renderDetail",
               "parameters": [
                 {
-                  "name": "entryRecord",
+                  "name": "cancellation",
                   "type": {
                     "text": "EntryRecord<Cancellation>"
                   }
@@ -303,6 +464,13 @@
                 "text": "ActionHash"
               },
               "fieldName": "cancellationHash"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "label"
             }
           ],
           "superclass": {
@@ -470,7 +638,105 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/elements/create-cancellation.ts",
+      "path": "src/elements/cancellations-for.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CancellationsFor",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cancelledHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "attribute": "cancelledHash"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hideNoCancellationsNotice",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "hide-no-cancellations-notice"
+            },
+            {
+              "kind": "method",
+              "name": "renderList",
+              "parameters": [
+                {
+                  "name": "hashes",
+                  "type": {
+                    "text": "Array<ActionHash>"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cancelledHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "fieldName": "cancelledHash"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "label"
+            },
+            {
+              "name": "hide-no-cancellations-notice",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hideNoCancellationsNotice"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "cancellations-for",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CancellationsFor",
+          "declaration": {
+            "name": "CancellationsFor",
+            "module": "src/elements/cancellations-for.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cancellations-for",
+          "declaration": {
+            "name": "CancellationsFor",
+            "module": "src/elements/cancellations-for.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/create-cancellation-dialog.ts",
       "declarations": [
         {
           "kind": "class",
@@ -479,11 +745,28 @@
           "members": [
             {
               "kind": "field",
-              "name": "cancellationsHash",
+              "name": "cancelledHash",
               "type": {
                 "text": "ActionHash"
               },
-              "attribute": "cancellationsHash"
+              "attribute": "cancelledHash"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "warning",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "warning"
+            },
+            {
+              "kind": "method",
+              "name": "show"
             },
             {
               "kind": "method",
@@ -512,11 +795,22 @@
           ],
           "attributes": [
             {
-              "name": "cancellationsHash",
+              "name": "cancelledHash",
               "type": {
                 "text": "ActionHash"
               },
-              "fieldName": "cancellationsHash"
+              "fieldName": "cancelledHash"
+            },
+            {
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "name": "warning",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "warning"
             }
           ],
           "superclass": {
@@ -533,28 +827,36 @@
           "name": "CreateCancellation",
           "declaration": {
             "name": "CreateCancellation",
-            "module": "src/elements/create-cancellation.ts"
+            "module": "src/elements/create-cancellation-dialog.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "create-cancellation",
+          "name": "create-cancellation-dialog",
           "declaration": {
             "name": "CreateCancellation",
-            "module": "src/elements/create-cancellation.ts"
+            "module": "src/elements/create-cancellation-dialog.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/elements/edit-cancellation.ts",
+      "path": "src/elements/edit-cancellation-dialog.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
-          "name": "EditCancellation",
+          "name": "EditCancellationDialog",
           "members": [
+            {
+              "kind": "field",
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "attribute": "cancellationHash"
+            },
             {
               "kind": "field",
               "name": "currentRecord",
@@ -562,6 +864,10 @@
                 "text": "EntryRecord<Cancellation>"
               },
               "attribute": "currentRecord"
+            },
+            {
+              "kind": "method",
+              "name": "show"
             },
             {
               "kind": "method",
@@ -584,17 +890,18 @@
               }
             },
             {
-              "name": "edit-canceled",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
               "description": "detail will contain { previousCancellationHash, updatedCancellationHash }",
               "name": "cancellation-updated:"
             }
           ],
           "attributes": [
+            {
+              "name": "cancellationHash",
+              "type": {
+                "text": "ActionHash"
+              },
+              "fieldName": "cancellationHash"
+            },
             {
               "name": "currentRecord",
               "type": {
@@ -607,25 +914,25 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "edit-cancellation",
+          "tagName": "edit-cancellation-dialog",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "EditCancellation",
+          "name": "EditCancellationDialog",
           "declaration": {
-            "name": "EditCancellation",
-            "module": "src/elements/edit-cancellation.ts"
+            "name": "EditCancellationDialog",
+            "module": "src/elements/edit-cancellation-dialog.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "edit-cancellation",
+          "name": "edit-cancellation-dialog",
           "declaration": {
-            "name": "EditCancellation",
-            "module": "src/elements/edit-cancellation.ts"
+            "name": "EditCancellationDialog",
+            "module": "src/elements/edit-cancellation-dialog.ts"
           }
         }
       ]

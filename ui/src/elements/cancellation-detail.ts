@@ -5,6 +5,7 @@ import {
   wrapPathInSvg,
 } from '@holochain-open-dev/elements';
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
+import '@holochain-open-dev/profiles/dist/elements/agent-avatar.js';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { ActionHash, EntryHash, Record } from '@holochain/client';
@@ -17,24 +18,23 @@ import {
   mdiDotsVertical,
   mdiPencil,
 } from '@mdi/js';
+import { SlDialog } from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
 import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@shoelace-style/shoelace/dist/components/relative-time/relative-time.js';
-import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
-import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import '@holochain-open-dev/profiles/dist/elements/agent-avatar.js';
 
 import { CancellationsStore } from '../cancellations-store.js';
 import { cancellationsStoreContext } from '../context.js';
 import { Cancellation } from '../types.js';
 import './edit-cancellation-dialog.js';
 import { EditCancellationDialog } from './edit-cancellation-dialog.js';
-import { SlDialog } from '@shoelace-style/shoelace';
 
 /**
  * @element cancellation-detail

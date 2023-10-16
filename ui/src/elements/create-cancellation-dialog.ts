@@ -14,17 +14,17 @@ import { localized, msg } from '@lit/localize';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
+import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
+import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
-import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import { LitElement, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import { CancellationsStore } from '../cancellations-store.js';
 import { cancellationsStoreContext } from '../context.js';
 import { Cancellation } from '../types.js';
-import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 
 /**
  * @element create-cancellation
