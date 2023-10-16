@@ -12,7 +12,7 @@ hdk = { workspace = true }
 
 serde = { workspace = true }
 
-cancellations_integrity = { path = "../../integrity/cancellations", package = "hc_zome_cancellations_integrity" }
+hc_zome_cancellations_integrity = { path = "../../integrity/cancellations", version = "0.0.1" }
 
 [dev-dependencies]
 fixt = "*"

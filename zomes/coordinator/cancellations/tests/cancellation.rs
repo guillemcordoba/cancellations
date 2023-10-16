@@ -6,7 +6,7 @@ use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
-use cancellations_integrity::*;
+use hc_zome_cancellations_integrity::*;
 
 use hc_zome_cancellations_coordinator::cancellation::UpdateCancellationInput;
 

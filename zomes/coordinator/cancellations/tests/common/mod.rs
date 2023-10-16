@@ -1,7 +1,7 @@
 use hdk::prelude::*;
 use holochain::sweettest::*;
 
-use cancellations_integrity::*;
+use hc_zome_cancellations_integrity::*;
 
 pub async fn sample_cancellation_1(conductor: &SweetConductor, zome: &SweetZome) -> Cancellation {
     Cancellation {

@@ -1,5 +1,5 @@
 pub mod cancellation;
-use cancellations_integrity::*;
+use hc_zome_cancellations_integrity::*;
 use hdk::prelude::*;
 
 #[hdk_extern]
