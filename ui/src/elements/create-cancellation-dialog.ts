@@ -32,7 +32,7 @@ import { Cancellation } from '../types.js';
  */
 @localized()
 @customElement('create-cancellation-dialog')
-export class CreateCancellation extends LitElement {
+export class CreateCancellationDialog extends LitElement {
   // REQUIRED. The cancelled hash for this Cancellation
   @property(hashProperty('cancelled-hash'))
   cancelledHash!: ActionHash;

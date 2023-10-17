@@ -215,7 +215,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./cancellations-store"
+            "package": "./cancellations-store.js"
           }
         },
         {
@@ -223,7 +223,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./cancellations-client"
+            "package": "./cancellations-client.js"
           }
         },
         {
@@ -231,7 +231,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./context"
+            "package": "./context.js"
           }
         },
         {
@@ -239,7 +239,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./types"
+            "package": "./types.js"
           }
         }
       ]
@@ -741,7 +741,7 @@
         {
           "kind": "class",
           "description": "",
-          "name": "CreateCancellation",
+          "name": "CreateCancellationDialog",
           "members": [
             {
               "kind": "field",
@@ -824,9 +824,9 @@
       "exports": [
         {
           "kind": "js",
-          "name": "CreateCancellation",
+          "name": "CreateCancellationDialog",
           "declaration": {
-            "name": "CreateCancellation",
+            "name": "CreateCancellationDialog",
             "module": "src/elements/create-cancellation-dialog.ts"
           }
         },
@@ -834,7 +834,7 @@
           "kind": "custom-element-definition",
           "name": "create-cancellation-dialog",
           "declaration": {
-            "name": "CreateCancellation",
+            "name": "CreateCancellationDialog",
             "module": "src/elements/create-cancellation-dialog.ts"
           }
         }

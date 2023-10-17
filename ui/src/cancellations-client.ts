@@ -1,17 +1,7 @@
-import {
-  EntryRecord,
-  ZomeClient,
-  isSignalFromCellWithRole,
-} from '@holochain-open-dev/utils';
-import {
-  ActionHash,
-  AgentPubKey,
-  AppAgentClient,
-  EntryHash,
-  Record,
-} from '@holochain/client';
+import { EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
+import { ActionHash, AppAgentClient, Record } from '@holochain/client';
 
-import { Cancellation, CancellationsSignal } from './types';
+import { Cancellation, CancellationsSignal } from './types.js';
 
 export class CancellationsClient extends ZomeClient<CancellationsSignal> {
   constructor(

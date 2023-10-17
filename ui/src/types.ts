@@ -1,13 +1,9 @@
 import {
   ActionHash,
-  AgentPubKey,
   Create,
   CreateLink,
   Delete,
   DeleteLink,
-  DnaHash,
-  EntryHash,
-  Record,
   SignedActionHashed,
   Update,
 } from '@holochain/client';
