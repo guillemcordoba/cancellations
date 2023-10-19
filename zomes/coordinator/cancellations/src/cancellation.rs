@@ -72,7 +72,7 @@ pub fn update_cancellation(input: UpdateCancellationInput) -> ExternResult<Recor
     Ok(record)
 }
 #[hdk_extern]
-pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult<ActionHash> {
+pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult<()> {
     let record = get_cancellation(original_cancellation_hash.clone())?.ok_or(wasm_error!(
         WasmErrorInner::Guest("Cancellation not found".to_string())
     ))?;
@@ -93,7 +93,7 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
         }
     }
 
-    delete_entry(original_cancellation_hash)
+    Ok(())
 }
 #[hdk_extern]
 pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<ActionHash>> {
@@ -101,6 +101,22 @@ pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Action
     let action_hashes: Vec<ActionHash> = links
         .into_iter()
         .filter_map(|link| link.target.into_action_hash())
+        .collect();
+    Ok(action_hashes)
+}
+
+#[hdk_extern]
+pub fn get_undone_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<ActionHash>> {
+    let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
+    let action_hashes: Vec<ActionHash> = details
+        .into_inner()
+        .into_iter()
+        .filter(|(_link, deletes)| deletes.len() > 0)
+        .filter_map(|(link, _deletes)| match link.hashed.content {
+            Action::CreateLink(cl) => Some(cl),
+            _ => None,
+        })
+        .filter_map(|link| link.target_address.into_action_hash())
         .collect();
     Ok(action_hashes)
 }

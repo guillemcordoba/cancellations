@@ -103,31 +103,51 @@ test('create and delete Cancellation', async () => {
   await runScenario(async scenario => {
     const { alice, bob } = await setup(scenario);
 
+    const cancelledHash = await fakeActionHash();
+
+    let cancellactionsFor = await toPromise(
+      alice.store.cancellationsFor.get(cancelledHash)
+    );
+    assert.equal(cancellactionsFor.length, 0);
+
+    let undoneCancellactionsFor = await toPromise(
+      alice.store.undoneCancellationsFor.get(cancelledHash)
+    );
+    assert.equal(undoneCancellactionsFor.length, 0);
+
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
       await alice.store.client.createCancellation(
-        await fakeActionHash(),
+        cancelledHash,
         'Lorem ipsum 2'
       );
     assert.ok(cancellation);
 
-    // Alice deletes the Cancellation
-    const deleteActionHash = await alice.store.client.undoCancellation(
-      cancellation.actionHash
+    cancellactionsFor = await toPromise(
+      alice.store.cancellationsFor.get(cancelledHash)
     );
-    assert.ok(deleteActionHash);
+    assert.equal(cancellactionsFor.length, 1);
+
+    // Alice deletes the Cancellation
+    await alice.store.client.undoCancellation(cancellation.actionHash);
+
+    cancellactionsFor = await toPromise(
+      alice.store.cancellationsFor.get(cancelledHash)
+    );
+    assert.equal(cancellactionsFor.length, 0);
 
     // Wait for the created entry to be propagated to the other node.
     await dhtSync([alice.player, bob.player], alice.player.cells[0].cell_id[0]);
 
     // Bob tries to get the deleted Cancellation
-    try {
-      const readDeletedOutput: EntryRecord<Cancellation> = await toPromise(
-        bob.store.cancellations.get(cancellation.actionHash)
-      );
-      assert.ok(false);
-    } catch (e) {
-      assert.ok(true);
-    }
+    const readDeletedOutput: EntryRecord<Cancellation> = await toPromise(
+      bob.store.cancellations.get(cancellation.actionHash)
+    );
+    assert.ok(readDeletedOutput);
+
+    undoneCancellactionsFor = await toPromise(
+      alice.store.undoneCancellationsFor.get(cancelledHash)
+    );
+    assert.equal(undoneCancellactionsFor.length, 1);
   });
 });

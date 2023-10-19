@@ -19,6 +19,13 @@ export class CancellationsStore {
     )
   );
 
+  undoneCancellationsFor = new LazyHoloHashMap((cancelledHash: ActionHash) =>
+    lazyLoadAndPoll(
+      async () => this.client.getUndoneCancellationsFor(cancelledHash),
+      4000
+    )
+  );
+
   cancellations = new LazyHoloHashMap((cancelledHash: ActionHash) =>
     lazyLoadAndPoll(async () => {
       const c = await this.client.getCancellation(cancelledHash);

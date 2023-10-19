@@ -35,7 +35,7 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
     return record ? new EntryRecord(record) : undefined;
   }
 
-  undoCancellation(cancellationHash: ActionHash): Promise<ActionHash> {
+  undoCancellation(cancellationHash: ActionHash): Promise<void> {
     return this.callZome('undo_cancellation', cancellationHash);
   }
 
@@ -52,5 +52,11 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
 
   getCancellationsFor(actionHash: ActionHash): Promise<Array<ActionHash>> {
     return this.callZome('get_cancellations_for', actionHash);
+  }
+
+  getUndoneCancellationsFor(
+    actionHash: ActionHash
+  ): Promise<Array<ActionHash>> {
+    return this.callZome('get_undone_cancellations_for', actionHash);
   }
 }
