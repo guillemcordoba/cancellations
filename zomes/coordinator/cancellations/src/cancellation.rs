@@ -71,6 +71,7 @@ pub fn update_cancellation(input: UpdateCancellationInput) -> ExternResult<Recor
     )?;
     Ok(record)
 }
+
 #[hdk_extern]
 pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult<()> {
     let record = get_cancellation(original_cancellation_hash.clone())?.ok_or(wasm_error!(
@@ -105,18 +106,39 @@ pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Action
     Ok(action_hashes)
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UndoneCancellation {
+    cancellation_hash: ActionHash,
+    undo_records: Vec<Record>,
+}
+
 #[hdk_extern]
-pub fn get_undone_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<ActionHash>> {
+pub fn get_undone_cancellations_for(
+    action_hash: ActionHash,
+) -> ExternResult<Vec<UndoneCancellation>> {
     let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
-    let action_hashes: Vec<ActionHash> = details
+    let undone_cancellations: Vec<UndoneCancellation> = details
         .into_inner()
         .into_iter()
         .filter(|(_link, deletes)| deletes.len() > 0)
-        .filter_map(|(link, _deletes)| match link.hashed.content {
-            Action::CreateLink(cl) => Some(cl),
+        .filter_map(|(link, deletes)| match link.hashed.content {
+            Action::CreateLink(cl) => Some((cl, deletes)),
             _ => None,
         })
-        .filter_map(|link| link.target_address.into_action_hash())
+        .filter_map(|(link, deletes)| {
+            link.target_address
+                .into_action_hash()
+                .map(|cancellation_hash| UndoneCancellation {
+                    cancellation_hash,
+                    undo_records: deletes
+                        .into_iter()
+                        .map(|d| Record {
+                            signed_action: d,
+                            entry: RecordEntry::NA,
+                        })
+                        .collect(),
+                })
+        })
         .collect();
-    Ok(action_hashes)
+    Ok(undone_cancellations)
 }

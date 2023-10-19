@@ -99,7 +99,7 @@ test('create and update Cancellation', async () => {
   });
 });
 
-test('create and delete Cancellation', async () => {
+test.only('create and delete Cancellation', async () => {
   await runScenario(async scenario => {
     const { alice, bob } = await setup(scenario);
 

@@ -56,7 +56,12 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
 
   getUndoneCancellationsFor(
     actionHash: ActionHash
-  ): Promise<Array<ActionHash>> {
+  ): Promise<Array<UndoneCancellation>> {
     return this.callZome('get_undone_cancellations_for', actionHash);
   }
+}
+
+export interface UndoneCancellation {
+  cancellation_hash: ActionHash;
+  undo_records: Record[];
 }
