@@ -63,7 +63,7 @@ export class CancellationsFor extends LitElement {
     }
 
     return html`
-      <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; gap: 16px">
         ${hashes.map(
           hash =>
             html`<cancellation-detail
