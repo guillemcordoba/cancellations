@@ -29,16 +29,12 @@
             devShells.default = pkgs.mkShell {
               inputsFrom = [ holochain-flake.devShells.${system}.holonix ];
 
-              packages = [
-                pkgs.nodejs-18_x
-                pkgs.cargo-nextest
+              packages = with pkgs; [
+                nodejs-18_x
+                cargo-nextest
               ];
 
-              shellHook = ''
-                unset CARGO_TARGET_DIR
-                unset CARGO_HOME
-              '';
-};
+            };
           };
       };
 }
