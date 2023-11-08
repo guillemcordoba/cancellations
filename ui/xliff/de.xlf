@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="de" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="scc363d3dec060805">
+  <source>Error updating the cancellation</source>
+  <target>Bearbeiten der Absage fehlgeschlagen</target>
+</trans-unit>
+<trans-unit id="s2f71e715198c42bc">
+  <source>Edit Cancellation Reason</source>
+  <target>Grund der Absage bearbeiten</target>
+</trans-unit>
+<trans-unit id="saa29a2ac03cd9d19">
+  <source>Reason</source>
+  <target>Grund</target>
+</trans-unit>
+<trans-unit id="sb83af6853f8153d4">
+  <source>Save reason</source>
+  <target>Grund speichern</target>
+</trans-unit>
+<trans-unit id="s766487d31d3dd4e1">
+  <source>was cancelled</source>
+  <target>wurde abgesagt</target>
+</trans-unit>
+<trans-unit id="s4d21a68bb0a48ff3">
+  <source>Error deleting the cancellation</source>
+  <target>Absage löschen fehlgeschlagen</target>
+</trans-unit>
+<trans-unit id="sfe5bdb134567c096">
+  <source>Undo Cancellation</source>
+  <target>Absage zurückziehen</target>
+</trans-unit>
+<trans-unit id="s2617451fb419b0f1">
+  <source>Are you sure you want to undo this cancellation?</source>
+  <target>Bist du sicher, dass du diese Absage zurückziehen möchtest?</target>
+</trans-unit>
+<trans-unit id="s678863b5adc0dc76">
+  <source>Undo cancellation</source>
+  <target>Absage zurückziehen</target>
+</trans-unit>
+<trans-unit id="s8f16945b7543ca07">
+  <source>Edit reason</source>
+  <target>Grund bearbeiten</target>
+</trans-unit>
+<trans-unit id="s09134b07b5aacab4">
+  <source>By</source>
+  <target>Durch</target>
+</trans-unit>
+<trans-unit id="se03259a7f136574b">
+  <source>Error fetching the cancellation</source>
+  <target>Absage laden fehlgeschlagen</target>
+</trans-unit>
+<trans-unit id="s12081f543132112a">
+  <source>The requested cancellation doesn't exist</source>
+  <target>Die gesuchte Absage existiert nicht</target>
+</trans-unit>
+<trans-unit id="s19bae910bcacc8d2">
+  <source>No cancellations found</source>
+  <target>Keine Absagen gefunden</target>
+</trans-unit>
+<trans-unit id="s2be5905edf563428">
+  <source>Error fetching the cancellations</source>
+  <target>Absagen laden fehlgeschlagen</target>
+</trans-unit>
+<trans-unit id="s2ceb11be2290bb1b">
+  <source>Cancel</source>
+  <target>Abbrechen</target>
+</trans-unit>
+<trans-unit id="s4c81ae80d4520c96">
+  <source>Error creating the cancellation</source>
+  <target>Absage erstellen fehlgeschlagen</target>
+</trans-unit>
+</body>
+</file>
+</xliff>
