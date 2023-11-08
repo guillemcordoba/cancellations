@@ -4,54 +4,71 @@
 <body>
 <trans-unit id="scc363d3dec060805">
   <source>Error updating the cancellation</source>
+  <target>Fel vid uppdatering av borttagning</target>
 </trans-unit>
 <trans-unit id="s2f71e715198c42bc">
   <source>Edit Cancellation Reason</source>
+   <target>Redigera orsak för borttagning</target>
 </trans-unit>
 <trans-unit id="saa29a2ac03cd9d19">
   <source>Reason</source>
+   <target>Orsak</target>
 </trans-unit>
 <trans-unit id="sb83af6853f8153d4">
   <source>Save reason</source>
+   <target>Spara orsak</target>
 </trans-unit>
 <trans-unit id="s766487d31d3dd4e1">
   <source>was cancelled</source>
+   <target>togs bort</target>
 </trans-unit>
 <trans-unit id="s4d21a68bb0a48ff3">
   <source>Error deleting the cancellation</source>
+   <target>Fel vid borttagning av borttagning</target>
 </trans-unit>
 <trans-unit id="sfe5bdb134567c096">
   <source>Undo Cancellation</source>
+   <target>Ångra borttagning</target>
 </trans-unit>
 <trans-unit id="s2617451fb419b0f1">
   <source>Are you sure you want to undo this cancellation?</source>
+   <target>Är du säker att du vill ta bort?</target>
 </trans-unit>
 <trans-unit id="s678863b5adc0dc76">
   <source>Undo cancellation</source>
+   <target>Ångra borttagning</target>
 </trans-unit>
 <trans-unit id="s8f16945b7543ca07">
   <source>Edit reason</source>
+   <target>Redigera orsak</target>
 </trans-unit>
 <trans-unit id="s09134b07b5aacab4">
   <source>By</source>
+   <target>Av</target>
 </trans-unit>
 <trans-unit id="se03259a7f136574b">
   <source>Error fetching the cancellation</source>
+   <target>Fel vid hämtning av borttagning</target>
 </trans-unit>
 <trans-unit id="s12081f543132112a">
   <source>The requested cancellation doesn't exist</source>
+   <target>Den sökta borttagningen existerar inte</target>
 </trans-unit>
 <trans-unit id="s19bae910bcacc8d2">
   <source>No cancellations found</source>
+   <target>Inga borttagningar hittade</target>
 </trans-unit>
 <trans-unit id="s2be5905edf563428">
   <source>Error fetching the cancellations</source>
+   <target>Fel vid hämtning av borttagning</target>
 </trans-unit>
 <trans-unit id="s2ceb11be2290bb1b">
   <source>Cancel</source>
+   <target>Ta bort</target>
 </trans-unit>
 <trans-unit id="s4c81ae80d4520c96">
   <source>Error creating the cancellation</source>
+   <target>Fel vid skapadet av borttagning</target>
 </trans-unit>
 </body>
 </file>

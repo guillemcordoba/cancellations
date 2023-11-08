@@ -4,6 +4,158 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "locales/ca.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "templates",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n      's09134b07b5aacab4': `Per`,\n's12081f543132112a': `Aquesta cancel·lació no existeix`,\n's19bae910bcacc8d2': `No s'ha trobat cap cancel·lació`,\n's2617451fb419b0f1': `Estàs segur que vols desfer aquesta cancel·lació?`,\n's2be5905edf563428': `Error buscant les cancel·lacions`,\n's2ceb11be2290bb1b': `Cancel·lar`,\n's2f71e715198c42bc': `Editar la raó de la cancel·lació`,\n's4c81ae80d4520c96': `Error creant la cancel·lació`,\n's4d21a68bb0a48ff3': `Error suprimint la cancel·lació`,\n's678863b5adc0dc76': `Desfer cancel·lació`,\n's766487d31d3dd4e1': `ha esta cancel·lat`,\n's8f16945b7543ca07': `Editar raó`,\n'saa29a2ac03cd9d19': `Raó de la cancel·lació`,\n'sb83af6853f8153d4': `Guardar raó`,\n'scc363d3dec060805': `Error actualitzant la cancel·lació`,\n'se03259a7f136574b': `Error buscant la cancel·lació`,\n'sfe5bdb134567c096': `Desfer Cancel·lació`,\n    }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "templates",
+          "declaration": {
+            "name": "templates",
+            "module": "locales/ca.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "locales/de.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "templates",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n      's09134b07b5aacab4': `Durch`,\n's12081f543132112a': `Die gesuchte Absage existiert nicht`,\n's19bae910bcacc8d2': `Keine Absagen gefunden`,\n's2617451fb419b0f1': `Bist du sicher, dass du diese Absage zurückziehen möchtest?`,\n's2be5905edf563428': `Absagen laden fehlgeschlagen`,\n's2ceb11be2290bb1b': `Abbrechen`,\n's2f71e715198c42bc': `Grund der Absage bearbeiten`,\n's4c81ae80d4520c96': `Absage erstellen fehlgeschlagen`,\n's4d21a68bb0a48ff3': `Absage löschen fehlgeschlagen`,\n's678863b5adc0dc76': `Absage zurückziehen`,\n's766487d31d3dd4e1': `wurde abgesagt`,\n's8f16945b7543ca07': `Grund bearbeiten`,\n'saa29a2ac03cd9d19': `Grund`,\n'sb83af6853f8153d4': `Grund speichern`,\n'scc363d3dec060805': `Bearbeiten der Absage fehlgeschlagen`,\n'se03259a7f136574b': `Absage laden fehlgeschlagen`,\n'sfe5bdb134567c096': `Absage zurückziehen`,\n    }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "templates",
+          "declaration": {
+            "name": "templates",
+            "module": "locales/de.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "locales/es.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "templates",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n      's09134b07b5aacab4': `Por`,\n's12081f543132112a': `Esta cancelación no existe`,\n's19bae910bcacc8d2': `No se ha encontrado ninguna cancelación`,\n's2617451fb419b0f1': `¿Estás seguro de que quieres deshacer esta cancelación?`,\n's2be5905edf563428': `Error buscando las cancelaciones`,\n's2ceb11be2290bb1b': `Cancelar`,\n's2f71e715198c42bc': `Editar la razón de la cancelación`,\n's4c81ae80d4520c96': `Error creando la cancelación`,\n's4d21a68bb0a48ff3': `Error suprimiendo la cancelación`,\n's678863b5adc0dc76': `Deshacer cancelación`,\n's766487d31d3dd4e1': `fue cancelado`,\n's8f16945b7543ca07': `Editar razón`,\n'saa29a2ac03cd9d19': `Razón de la cancelación`,\n'sb83af6853f8153d4': `Guardar razón`,\n'scc363d3dec060805': `Error actualizando la cancelación`,\n'se03259a7f136574b': `Error buscando la cancelación`,\n'sfe5bdb134567c096': `Deshacer Cancelación`,\n    }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "templates",
+          "declaration": {
+            "name": "templates",
+            "module": "locales/es.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "locales/locales.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "sourceLocale",
+          "default": "`en`",
+          "description": "The locale code that templates in this source code are written in."
+        },
+        {
+          "kind": "variable",
+          "name": "targetLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[\n  `ca`,\n  `de`,\n  `es`,\n  `sv`,\n]",
+          "description": "The other locale codes that this application is localized into. Sorted\nlexicographically."
+        },
+        {
+          "kind": "variable",
+          "name": "allLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[\n  `ca`,\n  `de`,\n  `en`,\n  `es`,\n  `sv`,\n]",
+          "description": "All valid project locale codes. Sorted lexicographically."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "sourceLocale",
+          "declaration": {
+            "name": "sourceLocale",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "targetLocales",
+          "declaration": {
+            "name": "targetLocales",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "allLocales",
+          "declaration": {
+            "name": "allLocales",
+            "module": "locales/locales.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "locales/sv.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "templates",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n      's09134b07b5aacab4': `Av`,\n's12081f543132112a': `Den sökta borttagningen existerar inte`,\n's19bae910bcacc8d2': `Inga borttagningar hittade`,\n's2617451fb419b0f1': `Är du säker att du vill ta bort?`,\n's2be5905edf563428': `Fel vid hämtning av borttagning`,\n's2ceb11be2290bb1b': `Ta bort`,\n's2f71e715198c42bc': `Redigera orsak för borttagning`,\n's4c81ae80d4520c96': `Fel vid skapadet av borttagning`,\n's4d21a68bb0a48ff3': `Fel vid borttagning av borttagning`,\n's678863b5adc0dc76': `Ångra borttagning`,\n's766487d31d3dd4e1': `togs bort`,\n's8f16945b7543ca07': `Redigera orsak`,\n'saa29a2ac03cd9d19': `Orsak`,\n'sb83af6853f8153d4': `Spara orsak`,\n'scc363d3dec060805': `Fel vid uppdatering av borttagning`,\n'se03259a7f136574b': `Fel vid hämtning av borttagning`,\n'sfe5bdb134567c096': `Ångra borttagning`,\n    }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "templates",
+          "declaration": {
+            "name": "templates",
+            "module": "locales/sv.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/cancellations-client.ts",
       "declarations": [
         {
@@ -37,10 +189,10 @@
             },
             {
               "kind": "method",
-              "name": "getCancellation",
+              "name": "getLatestCancellation",
               "return": {
                 "type": {
-                  "text": "Promise<EntryRecord<Cancellation> | undefined>"
+                  "text": "Promise<EntryRecord<Cancellation>>"
                 }
               },
               "parameters": [
@@ -114,12 +266,29 @@
               "name": "getUndoneCancellationsFor",
               "return": {
                 "type": {
-                  "text": "Promise<Array<UndoneCancellation>>"
+                  "text": "Promise<Array<[CreateLink, Array<SignedActionHashed<DeleteLink>>]>>"
                 }
               },
               "parameters": [
                 {
                   "name": "actionHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getCancellationDeletions",
+              "return": {
+                "type": {
+                  "text": "Promise<Array<SignedActionHashed<Delete>>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancellationHash",
                   "type": {
                     "text": "ActionHash"
                   }
@@ -149,23 +318,6 @@
       "path": "src/cancellations-store.ts",
       "declarations": [
         {
-          "kind": "function",
-          "name": "throwIfUndefined",
-          "return": {
-            "type": {
-              "text": "T"
-            }
-          },
-          "parameters": [
-            {
-              "name": "object",
-              "type": {
-                "text": "T | undefined"
-              }
-            }
-          ]
-        },
-        {
           "kind": "class",
           "description": "",
           "name": "CancellationsStore",
@@ -173,30 +325,17 @@
             {
               "kind": "field",
               "name": "cancellationsFor",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(\n      async () => this.client.getCancellationsFor(cancelledHash),\n      4000\n    )\n  )"
-            },
-            {
-              "kind": "field",
-              "name": "undoneCancellationsFor",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(\n      async () => this.client.getUndoneCancellationsFor(cancelledHash),\n      4000\n    )\n  )"
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) => ({\n    live: liveLinksTargetsStore(\n      this.client,\n      cancelledHash,\n      () => this.client.getCancellationsFor(cancelledHash),\n      'Cancellations'\n    ),\n    undone: deletedLinksTargetsStore(\n      this.client,\n      cancelledHash,\n      () => this.client.getUndoneCancellationsFor(cancelledHash),\n      'Cancellations'\n    ),\n  }))"
             },
             {
               "kind": "field",
               "name": "cancellations",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) =>\n    lazyLoadAndPoll(async () => {\n      const c = await this.client.getCancellation(cancelledHash);\n      return throwIfUndefined(c);\n    }, 4000)\n  )"
+              "default": "new LazyHoloHashMap((cancellationHash: ActionHash) => ({\n    latestVersion: latestVersionOfEntryStore(this.client, () =>\n      this.client.getLatestCancellation(cancellationHash)\n    ),\n    deletes: deletesForEntryStore(this.client, cancellationHash, () =>\n      this.client.getCancellationDeletions(cancellationHash)\n    ),\n  }))"
             }
           ]
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "throwIfUndefined",
-          "declaration": {
-            "name": "throwIfUndefined",
-            "module": "src/cancellations-store.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "CancellationsStore",

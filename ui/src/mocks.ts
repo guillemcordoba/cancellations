@@ -41,8 +41,8 @@ export class CancellationsZomeMock extends ZomeMock implements AppAgentClient {
   cancellationsFor = new HoloHashMap<ActionHash, ActionHash[]>();
 
   async create_cancellation(cancellation: Cancellation): Promise<Record> {
-    const record = fakeRecord(
-      fakeCreateAction(hash(cancellation, HashType.ENTRY)),
+    const record = await fakeRecord(
+      await fakeCreateAction(hash(cancellation, HashType.ENTRY)),
       fakeEntry(cancellation)
     );
 
@@ -71,7 +71,9 @@ export class CancellationsZomeMock extends ZomeMock implements AppAgentClient {
   async undo_cancellation(
     original_cancellation_hash: ActionHash
   ): Promise<ActionHash> {
-    const record = fakeRecord(fakeDeleteEntry(original_cancellation_hash));
+    const record = await fakeRecord(
+      await fakeDeleteEntry(original_cancellation_hash)
+    );
 
     this.cancellation.add([record]);
 
@@ -82,9 +84,11 @@ export class CancellationsZomeMock extends ZomeMock implements AppAgentClient {
     previous_cancellation_hash: ActionHash;
     updated_cancellation: Cancellation;
   }): Promise<Record> {
-    const record = fakeRecord(
-      fakeUpdateEntry(
+    const record = await fakeRecord(
+      await fakeUpdateEntry(
         input.previous_cancellation_hash,
+        undefined,
+        this.myPubKey,
         fakeEntry(input.updated_cancellation)
       ),
       fakeEntry(input.updated_cancellation)

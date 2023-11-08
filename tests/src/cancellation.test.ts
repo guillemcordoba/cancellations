@@ -44,7 +44,7 @@ test('create and read Cancellation', async () => {
 
     // Bob gets the created Cancellation
     const createReadOutput: EntryRecord<Cancellation> = await toPromise(
-      bob.store.cancellations.get(cancellation.actionHash)
+      bob.store.cancellations.get(cancellation.actionHash).latestVersion
     );
     assert.ok(cleanNodeDecoding(createReadOutput.entry));
   });
@@ -77,7 +77,7 @@ test('create and update Cancellation', async () => {
 
     // Bob gets the updated Cancellation
     const readUpdatedOutput0: EntryRecord<Cancellation> = await toPromise(
-      bob.store.cancellations.get(cancellation.actionHash)
+      bob.store.cancellations.get(cancellation.actionHash).latestVersion
     );
     assert.deepEqual(readUpdatedOutput0.entry.reason, 'a reason');
 
@@ -93,25 +93,25 @@ test('create and update Cancellation', async () => {
 
     // Bob gets the updated Cancellation
     const readUpdatedOutput1: EntryRecord<Cancellation> = await toPromise(
-      bob.store.cancellations.get(updatedCancellation.actionHash)
+      bob.store.cancellations.get(updatedCancellation.actionHash).latestVersion
     );
     assert.deepEqual(readUpdatedOutput1.entry.reason, 'new reason');
   });
 });
 
-test.only('create and delete Cancellation', async () => {
+test('create and delete Cancellation', async () => {
   await runScenario(async scenario => {
     const { alice, bob } = await setup(scenario);
 
     const cancelledHash = await fakeActionHash();
 
     let cancellactionsFor = await toPromise(
-      alice.store.cancellationsFor.get(cancelledHash)
+      alice.store.cancellationsFor.get(cancelledHash).live
     );
     assert.equal(cancellactionsFor.length, 0);
 
     let undoneCancellactionsFor = await toPromise(
-      alice.store.undoneCancellationsFor.get(cancelledHash)
+      alice.store.cancellationsFor.get(cancelledHash).undone
     );
     assert.equal(undoneCancellactionsFor.length, 0);
 
@@ -124,7 +124,7 @@ test.only('create and delete Cancellation', async () => {
     assert.ok(cancellation);
 
     cancellactionsFor = await toPromise(
-      alice.store.cancellationsFor.get(cancelledHash)
+      alice.store.cancellationsFor.get(cancelledHash).live
     );
     assert.equal(cancellactionsFor.length, 1);
 
@@ -132,7 +132,7 @@ test.only('create and delete Cancellation', async () => {
     await alice.store.client.undoCancellation(cancellation.actionHash);
 
     cancellactionsFor = await toPromise(
-      alice.store.cancellationsFor.get(cancelledHash)
+      alice.store.cancellationsFor.get(cancelledHash).live
     );
     assert.equal(cancellactionsFor.length, 0);
 
@@ -141,12 +141,17 @@ test.only('create and delete Cancellation', async () => {
 
     // Bob tries to get the deleted Cancellation
     const readDeletedOutput: EntryRecord<Cancellation> = await toPromise(
-      bob.store.cancellations.get(cancellation.actionHash)
+      bob.store.cancellations.get(cancellation.actionHash).latestVersion
     );
     assert.ok(readDeletedOutput);
 
+    const deletes = await toPromise(
+      bob.store.cancellations.get(cancellation.actionHash).deletes
+    );
+    assert.equal(deletes.length, 1);
+
     undoneCancellactionsFor = await toPromise(
-      alice.store.undoneCancellationsFor.get(cancelledHash)
+      alice.store.cancellationsFor.get(cancelledHash).undone
     );
     assert.equal(undoneCancellactionsFor.length, 1);
   });

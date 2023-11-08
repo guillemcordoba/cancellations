@@ -5,15 +5,14 @@ import {
 } from '@holochain-open-dev/elements';
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
-import { EntryRecord, RecordBag } from '@holochain-open-dev/utils';
-import { ActionHash, AgentPubKey, EntryHash, Record } from '@holochain/client';
-import { consume } from '@lit-labs/context';
+import { ActionHash } from '@holochain/client';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 import { CancellationsStore } from '../cancellations-store.js';
 import { cancellationsStoreContext } from '../context.js';
@@ -46,8 +45,10 @@ export class CancellationsFor extends LitElement {
   /**
    * @internal
    */
-  _cancellations = new StoreSubscriber(this, () =>
-    this.cancellationsStore.cancellationsFor.get(this.cancelledHash)
+  _cancellations = new StoreSubscriber(
+    this,
+    () => this.cancellationsStore.cancellationsFor.get(this.cancelledHash).live,
+    () => [this.cancelledHash]
   );
 
   renderList(hashes: Array<ActionHash>) {

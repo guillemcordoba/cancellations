@@ -1,5 +1,14 @@
 import { EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
-import { ActionHash, AppAgentClient, Record } from '@holochain/client';
+import {
+  ActionHash,
+  AppAgentClient,
+  CreateLink,
+  Delete,
+  DeleteLink,
+  HoloHash,
+  Record,
+  SignedActionHashed,
+} from '@holochain/client';
 
 import { Cancellation, CancellationsSignal } from './types.js';
 
@@ -25,14 +34,14 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
     return new EntryRecord(record);
   }
 
-  async getCancellation(
+  async getLatestCancellation(
     cancellationHash: ActionHash
-  ): Promise<EntryRecord<Cancellation> | undefined> {
+  ): Promise<EntryRecord<Cancellation>> {
     const record: Record = await this.callZome(
-      'get_cancellation',
+      'get_latest_cancellation',
       cancellationHash
     );
-    return record ? new EntryRecord(record) : undefined;
+    return new EntryRecord(record);
   }
 
   undoCancellation(cancellationHash: ActionHash): Promise<void> {
@@ -56,12 +65,18 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
 
   getUndoneCancellationsFor(
     actionHash: ActionHash
-  ): Promise<Array<UndoneCancellation>> {
+  ): Promise<Array<[CreateLink, Array<SignedActionHashed<DeleteLink>>]>> {
     return this.callZome('get_undone_cancellations_for', actionHash);
+  }
+
+  async getCancellationDeletions(
+    cancellationHash: ActionHash
+  ): Promise<Array<SignedActionHashed<Delete>>> {
+    return this.callZome('get_cancellation_deletions', cancellationHash);
   }
 }
 
-export interface UndoneCancellation {
-  cancellation_hash: ActionHash;
-  undo_records: Record[];
+export interface DeletedLinkTarget<H extends HoloHash = HoloHash> {
+  target_address: H;
+  delete_links: Array<SignedActionHashed<DeleteLink>>;
 }

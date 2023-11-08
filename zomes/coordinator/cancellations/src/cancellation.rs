@@ -20,27 +20,36 @@ pub fn create_cancellation(cancellation: Cancellation) -> ExternResult<Record> {
 }
 
 #[hdk_extern]
-pub fn get_cancellation(original_cancellation_hash: ActionHash) -> ExternResult<Option<Record>> {
-    get_latest_cancellation(original_cancellation_hash)
-}
-fn get_latest_cancellation(cancellation_hash: ActionHash) -> ExternResult<Option<Record>> {
-    let details = get_details(cancellation_hash, GetOptions::default())?.ok_or(wasm_error!(
-        WasmErrorInner::Guest("Cancellation not found".into())
-    ))?;
+pub fn get_cancellation_deletions(
+    cancellation_hash: ActionHash,
+) -> ExternResult<Vec<SignedActionHashed>> {
+    let details = get_details(cancellation_hash, GetOptions::default())?
+        .ok_or(wasm_error!(WasmErrorInner::Guest("NOT_FOUND".into())))?;
     let record_details = match details {
         Details::Entry(_) => Err(wasm_error!(WasmErrorInner::Guest(
             "Malformed details".into()
         ))),
         Details::Record(record_details) => Ok(record_details),
     }?;
-    if record_details.deletes.len() > 0 {
-        return Ok(None);
-    }
+    Ok(record_details.deletes)
+}
+
+#[hdk_extern]
+fn get_latest_cancellation(cancellation_hash: ActionHash) -> ExternResult<Record> {
+    let details = get_details(cancellation_hash, GetOptions::default())?
+        .ok_or(wasm_error!(WasmErrorInner::Guest("NOT_FOUND".into())))?;
+    let record_details = match details {
+        Details::Entry(_) => Err(wasm_error!(WasmErrorInner::Guest(
+            "Malformed details".into()
+        ))),
+        Details::Record(record_details) => Ok(record_details),
+    }?;
     match record_details.updates.last() {
         Some(update) => get_latest_cancellation(update.action_address().clone()),
-        None => Ok(Some(record_details.record)),
+        None => Ok(record_details.record),
     }
 }
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdateCancellationInput {
     pub previous_cancellation_hash: ActionHash,
@@ -48,9 +57,7 @@ pub struct UpdateCancellationInput {
 }
 #[hdk_extern]
 pub fn update_cancellation(input: UpdateCancellationInput) -> ExternResult<Record> {
-    let record = get_cancellation(input.previous_cancellation_hash.clone())?.ok_or(wasm_error!(
-        WasmErrorInner::Guest("Cancellation not found".to_string())
-    ))?;
+    let record = get_latest_cancellation(input.previous_cancellation_hash.clone())?;
 
     let Some(entry) = record.entry.as_option() else {
         return Err(wasm_error!(WasmErrorInner::Guest("Cancellation not found".to_string())));
@@ -74,9 +81,7 @@ pub fn update_cancellation(input: UpdateCancellationInput) -> ExternResult<Recor
 
 #[hdk_extern]
 pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult<()> {
-    let record = get_cancellation(original_cancellation_hash.clone())?.ok_or(wasm_error!(
-        WasmErrorInner::Guest("Cancellation not found".to_string())
-    ))?;
+    let record = get_latest_cancellation(original_cancellation_hash.clone())?;
 
     let Some(entry) = record.entry.as_option() else {
         return Err(wasm_error!(WasmErrorInner::Guest("Cancellation not found".to_string())));
@@ -94,8 +99,11 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
         }
     }
 
+    delete_entry(original_cancellation_hash)?;
+
     Ok(())
 }
+
 #[hdk_extern]
 pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<ActionHash>> {
     let links = get_links(action_hash, LinkTypes::Cancellations, None)?;
@@ -106,18 +114,12 @@ pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Action
     Ok(action_hashes)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct UndoneCancellation {
-    cancellation_hash: ActionHash,
-    undo_records: Vec<Record>,
-}
-
 #[hdk_extern]
 pub fn get_undone_cancellations_for(
     action_hash: ActionHash,
-) -> ExternResult<Vec<UndoneCancellation>> {
+) -> ExternResult<Vec<(CreateLink, Vec<SignedHashed<Action>>)>> {
     let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
-    let undone_cancellations: Vec<UndoneCancellation> = details
+    Ok(details
         .into_inner()
         .into_iter()
         .filter(|(_link, deletes)| deletes.len() > 0)
@@ -125,20 +127,5 @@ pub fn get_undone_cancellations_for(
             Action::CreateLink(cl) => Some((cl, deletes)),
             _ => None,
         })
-        .filter_map(|(link, deletes)| {
-            link.target_address
-                .into_action_hash()
-                .map(|cancellation_hash| UndoneCancellation {
-                    cancellation_hash,
-                    undo_records: deletes
-                        .into_iter()
-                        .map(|d| Record {
-                            signed_action: d,
-                            entry: RecordEntry::NA,
-                        })
-                        .collect(),
-                })
-        })
-        .collect();
-    Ok(undone_cancellations)
+        .collect())
 }

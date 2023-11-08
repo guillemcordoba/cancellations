@@ -1,35 +1,38 @@
-import { lazyLoadAndPoll } from '@holochain-open-dev/stores';
+import {
+  deletedLinksTargetsStore,
+  deletesForEntryStore,
+  latestVersionOfEntryStore,
+  liveLinksTargetsStore,
+} from '@holochain-open-dev/stores';
 import { LazyHoloHashMap } from '@holochain-open-dev/utils';
 import { ActionHash } from '@holochain/client';
 
 import { CancellationsClient } from './cancellations-client.js';
 
-export function throwIfUndefined<T>(object: T | undefined): T {
-  if (object === undefined || object === null) throw new Error('Not found');
-  return object;
-}
-
 export class CancellationsStore {
   constructor(public client: CancellationsClient) {}
 
-  cancellationsFor = new LazyHoloHashMap((cancelledHash: ActionHash) =>
-    lazyLoadAndPoll(
-      async () => this.client.getCancellationsFor(cancelledHash),
-      4000
-    )
-  );
+  cancellationsFor = new LazyHoloHashMap((cancelledHash: ActionHash) => ({
+    live: liveLinksTargetsStore(
+      this.client,
+      cancelledHash,
+      () => this.client.getCancellationsFor(cancelledHash),
+      'Cancellations'
+    ),
+    undone: deletedLinksTargetsStore(
+      this.client,
+      cancelledHash,
+      () => this.client.getUndoneCancellationsFor(cancelledHash),
+      'Cancellations'
+    ),
+  }));
 
-  undoneCancellationsFor = new LazyHoloHashMap((cancelledHash: ActionHash) =>
-    lazyLoadAndPoll(
-      async () => this.client.getUndoneCancellationsFor(cancelledHash),
-      4000
-    )
-  );
-
-  cancellations = new LazyHoloHashMap((cancelledHash: ActionHash) =>
-    lazyLoadAndPoll(async () => {
-      const c = await this.client.getCancellation(cancelledHash);
-      return throwIfUndefined(c);
-    }, 4000)
-  );
+  cancellations = new LazyHoloHashMap((cancellationHash: ActionHash) => ({
+    latestVersion: latestVersionOfEntryStore(this.client, () =>
+      this.client.getLatestCancellation(cancellationHash)
+    ),
+    deletes: deletesForEntryStore(this.client, cancellationHash, () =>
+      this.client.getCancellationDeletions(cancellationHash)
+    ),
+  }));
 }

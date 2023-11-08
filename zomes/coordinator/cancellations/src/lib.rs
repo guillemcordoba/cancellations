@@ -15,22 +15,24 @@ pub enum Signal {
     },
     LinkDeleted {
         action: SignedActionHashed,
+        create_link_action: SignedActionHashed,
         link_type: LinkTypes,
     },
     EntryCreated {
         action: SignedActionHashed,
         app_entry: EntryTypes,
     },
-    // EntryUpdated {
-    //     action: SignedActionHashed,
-    //     app_entry: EntryTypes,
-    //     original_app_entry: EntryTypes,
-    // },
+    EntryUpdated {
+        action: SignedActionHashed,
+        app_entry: EntryTypes,
+        original_app_entry: EntryTypes,
+    },
     EntryDeleted {
         action: SignedActionHashed,
         original_app_entry: EntryTypes,
     },
 }
+
 #[hdk_extern(infallible)]
 pub fn post_commit(committed_actions: Vec<SignedActionHashed>) {
     for action in committed_actions {
@@ -60,7 +62,11 @@ fn signal_action(action: SignedActionHashed) -> ExternResult<()> {
                     if let Ok(Some(link_type)) =
                         LinkTypes::from_type(create_link.zome_index, create_link.link_type)
                     {
-                        emit_signal(Signal::LinkDeleted { action, link_type })?;
+                        emit_signal(Signal::LinkDeleted {
+                            action,
+                            link_type,
+                            create_link_action: record.signed_action.clone(),
+                        })?;
                     }
                     Ok(())
                 }
@@ -71,10 +77,23 @@ fn signal_action(action: SignedActionHashed) -> ExternResult<()> {
                 }
             }
         }
-                Action::Create(_create) => {
+        Action::Create(_create) => {
             if let Ok(Some(app_entry)) = get_entry_for_action(&action.hashed.hash) {
-
                 emit_signal(Signal::EntryCreated { action, app_entry })?;
+            }
+            Ok(())
+        }
+        Action::Update(update) => {
+            if let Ok(Some(app_entry)) = get_entry_for_action(&action.hashed.hash) {
+                if let Ok(Some(original_app_entry)) =
+                    get_entry_for_action(&update.original_action_address)
+                {
+                    emit_signal(Signal::EntryUpdated {
+                        action,
+                        app_entry,
+                        original_app_entry,
+                    })?;
+                }
             }
             Ok(())
         }
