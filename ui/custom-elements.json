@@ -206,6 +206,23 @@
             },
             {
               "kind": "method",
+              "name": "getOriginalCancellation",
+              "return": {
+                "type": {
+                  "text": "Promise<EntryRecord<Cancellation>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cancellationHash",
+                  "type": {
+                    "text": "ActionHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "undoCancellation",
               "return": {
                 "type": {
@@ -330,7 +347,7 @@
             {
               "kind": "field",
               "name": "cancellations",
-              "default": "new LazyHoloHashMap((cancellationHash: ActionHash) => ({\n    latestVersion: latestVersionOfEntryStore(this.client, () =>\n      this.client.getLatestCancellation(cancellationHash)\n    ),\n    deletes: deletesForEntryStore(this.client, cancellationHash, () =>\n      this.client.getCancellationDeletions(cancellationHash)\n    ),\n  }))"
+              "default": "new LazyHoloHashMap((cancellationHash: ActionHash) => ({\n    latestVersion: latestVersionOfEntryStore(this.client, () =>\n      this.client.getLatestCancellation(cancellationHash)\n    ),\n    originalEntry: immutableEntryStore(() =>\n      this.client.getOriginalCancellation(cancellationHash)\n    ),\n    deletes: deletesForEntryStore(this.client, cancellationHash, () =>\n      this.client.getCancellationDeletions(cancellationHash)\n    ),\n  }))"
             }
           ]
         }

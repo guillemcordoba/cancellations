@@ -86,7 +86,7 @@ export class CancellationsFor extends LitElement {
         return html`<display-error
           tooltip
           .headline=${msg('Error fetching the cancellations')}
-          .error=${this._cancellations.value.error.data.data}
+          .error=${this._cancellations.value.error}
         ></display-error>`;
     }
   }

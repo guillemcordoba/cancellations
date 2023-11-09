@@ -44,6 +44,16 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
     return new EntryRecord(record);
   }
 
+  async getOriginalCancellation(
+    cancellationHash: ActionHash
+  ): Promise<EntryRecord<Cancellation>> {
+    const record: Record = await this.callZome(
+      'get_original_cancellation',
+      cancellationHash
+    );
+    return new EntryRecord(record);
+  }
+
   undoCancellation(cancellationHash: ActionHash): Promise<void> {
     return this.callZome('undo_cancellation', cancellationHash);
   }

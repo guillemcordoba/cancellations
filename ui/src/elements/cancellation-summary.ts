@@ -73,7 +73,7 @@ export class CancellationSummary extends LitElement {
       case 'error':
         return html`<display-error
           .headline=${msg('Error fetching the cancellation')}
-          .error=${this._cancellation.value.error.data.data}
+          .error=${this._cancellation.value.error}
         ></display-error>`;
     }
   }

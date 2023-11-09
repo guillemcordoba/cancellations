@@ -50,6 +50,18 @@ fn get_latest_cancellation(cancellation_hash: ActionHash) -> ExternResult<Record
     }
 }
 
+#[hdk_extern]
+fn get_original_cancellation(cancellation_hash: ActionHash) -> ExternResult<Record> {
+    let details = get_details(cancellation_hash, GetOptions::default())?
+        .ok_or(wasm_error!(WasmErrorInner::Guest("NOT_FOUND".into())))?;
+    match details {
+        Details::Entry(_) => Err(wasm_error!(WasmErrorInner::Guest(
+            "Malformed details".into()
+        ))),
+        Details::Record(record_details) => Ok(record_details.record),
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdateCancellationInput {
     pub previous_cancellation_hash: ActionHash,

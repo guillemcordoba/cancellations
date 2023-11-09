@@ -1,6 +1,7 @@
 import {
   deletedLinksTargetsStore,
   deletesForEntryStore,
+  immutableEntryStore,
   latestVersionOfEntryStore,
   liveLinksTargetsStore,
 } from '@holochain-open-dev/stores';
@@ -30,6 +31,9 @@ export class CancellationsStore {
   cancellations = new LazyHoloHashMap((cancellationHash: ActionHash) => ({
     latestVersion: latestVersionOfEntryStore(this.client, () =>
       this.client.getLatestCancellation(cancellationHash)
+    ),
+    originalEntry: immutableEntryStore(() =>
+      this.client.getOriginalCancellation(cancellationHash)
     ),
     deletes: deletesForEntryStore(this.client, cancellationHash, () =>
       this.client.getCancellationDeletions(cancellationHash)
