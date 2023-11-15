@@ -342,7 +342,7 @@
             {
               "kind": "field",
               "name": "cancellationsFor",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) => ({\n    live: liveLinksTargetsStore(\n      this.client,\n      cancelledHash,\n      () => this.client.getCancellationsFor(cancelledHash),\n      'Cancellations'\n    ),\n    undone: deletedLinksTargetsStore(\n      this.client,\n      cancelledHash,\n      () => this.client.getUndoneCancellationsFor(cancelledHash),\n      'Cancellations'\n    ),\n  }))"
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) => ({\n    live: pipe(\n      liveLinksTargetsStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      hashes => slice(this.cancellations, hashes)\n    ),\n    undone: pipe(\n      deletedLinksTargetsStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getUndoneCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      linksDeleted =>\n        slice(\n          this.cancellations,\n          linksDeleted.map(([cl]) => cl.target_address)\n        )\n    ),\n  }))"
             },
             {
               "kind": "field",

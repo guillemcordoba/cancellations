@@ -81,7 +81,9 @@ export class CancellationsFor extends LitElement {
       case 'pending':
         return html` <!-- TODO: what to put here? --> `;
       case 'complete':
-        return this.renderList(this._cancellations.value.value);
+        return this.renderList(
+          Array.from(this._cancellations.value.value.keys())
+        );
       case 'error':
         return html`<display-error
           tooltip

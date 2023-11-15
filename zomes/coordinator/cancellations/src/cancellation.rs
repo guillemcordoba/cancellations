@@ -129,7 +129,7 @@ pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Action
 #[hdk_extern]
 pub fn get_undone_cancellations_for(
     action_hash: ActionHash,
-) -> ExternResult<Vec<(CreateLink, Vec<SignedHashed<Action>>)>> {
+) -> ExternResult<Vec<(CreateLink, Vec<SignedHashedAction>)>> {
     let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
     Ok(details
         .into_inner()

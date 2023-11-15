@@ -85,8 +85,3 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
     return this.callZome('get_cancellation_deletions', cancellationHash);
   }
 }
-
-export interface DeletedLinkTarget<H extends HoloHash = HoloHash> {
-  target_address: H;
-  delete_links: Array<SignedActionHashed<DeleteLink>>;
-}
