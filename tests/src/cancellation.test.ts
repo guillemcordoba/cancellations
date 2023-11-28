@@ -108,12 +108,12 @@ test('create and delete Cancellation', async () => {
     let cancellactionsFor = await toPromise(
       alice.store.cancellationsFor.get(cancelledHash).live
     );
-    assert.equal(cancellactionsFor.length, 0);
+    assert.equal(cancellactionsFor.size, 0);
 
     let undoneCancellactionsFor = await toPromise(
       alice.store.cancellationsFor.get(cancelledHash).undone
     );
-    assert.equal(undoneCancellactionsFor.length, 0);
+    assert.equal(undoneCancellactionsFor.size, 0);
 
     // Alice creates a Cancellation
     const cancellation: EntryRecord<Cancellation> =
@@ -126,7 +126,7 @@ test('create and delete Cancellation', async () => {
     cancellactionsFor = await toPromise(
       alice.store.cancellationsFor.get(cancelledHash).live
     );
-    assert.equal(cancellactionsFor.length, 1);
+    assert.equal(cancellactionsFor.size, 1);
 
     // Alice deletes the Cancellation
     await alice.store.client.undoCancellation(cancellation.actionHash);
@@ -134,7 +134,7 @@ test('create and delete Cancellation', async () => {
     cancellactionsFor = await toPromise(
       alice.store.cancellationsFor.get(cancelledHash).live
     );
-    assert.equal(cancellactionsFor.length, 0);
+    assert.equal(cancellactionsFor.size, 0);
 
     // Wait for the created entry to be propagated to the other node.
     await dhtSync([alice.player, bob.player], alice.player.cells[0].cell_id[0]);
@@ -153,6 +153,6 @@ test('create and delete Cancellation', async () => {
     undoneCancellactionsFor = await toPromise(
       alice.store.cancellationsFor.get(cancelledHash).undone
     );
-    assert.equal(undoneCancellactionsFor.length, 1);
+    assert.equal(undoneCancellactionsFor.size, 1);
   });
 });

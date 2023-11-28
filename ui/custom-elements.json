@@ -266,7 +266,7 @@
               "name": "getCancellationsFor",
               "return": {
                 "type": {
-                  "text": "Promise<Array<ActionHash>>"
+                  "text": "Promise<Array<Link>>"
                 }
               },
               "parameters": [
@@ -283,7 +283,7 @@
               "name": "getUndoneCancellationsFor",
               "return": {
                 "type": {
-                  "text": "Promise<Array<[CreateLink, Array<SignedActionHashed<DeleteLink>>]>>"
+                  "text": "Promise<\n    Array<\n      [SignedActionHashed<CreateLink>, Array<SignedActionHashed<DeleteLink>>]\n    >\n  >"
                 }
               },
               "parameters": [
@@ -342,7 +342,7 @@
             {
               "kind": "field",
               "name": "cancellationsFor",
-              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) => ({\n    live: pipe(\n      liveLinksTargetsStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      hashes => slice(this.cancellations, hashes)\n    ),\n    undone: pipe(\n      deletedLinksTargetsStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getUndoneCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      linksDeleted =>\n        slice(\n          this.cancellations,\n          linksDeleted.map(([cl]) => cl.target_address)\n        )\n    ),\n  }))"
+              "default": "new LazyHoloHashMap((cancelledHash: ActionHash) => ({\n    live: pipe(\n      liveLinksStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      links =>\n        slice(\n          this.cancellations,\n          links.map(l => l.target)\n        )\n    ),\n    undone: pipe(\n      deletedLinksStore(\n        this.client,\n        cancelledHash,\n        () => this.client.getUndoneCancellationsFor(cancelledHash),\n        'Cancellations'\n      ),\n      linksDeleted =>\n        slice(\n          this.cancellations,\n          linksDeleted.map(([cl]) => cl.hashed.content.target_address)\n        )\n    ),\n  }))"
             },
             {
               "kind": "field",

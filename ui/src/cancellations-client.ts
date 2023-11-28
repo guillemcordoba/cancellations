@@ -5,7 +5,7 @@ import {
   CreateLink,
   Delete,
   DeleteLink,
-  HoloHash,
+  Link,
   Record,
   SignedActionHashed,
 } from '@holochain/client';
@@ -69,13 +69,17 @@ export class CancellationsClient extends ZomeClient<CancellationsSignal> {
     return new EntryRecord(record);
   }
 
-  getCancellationsFor(actionHash: ActionHash): Promise<Array<ActionHash>> {
+  getCancellationsFor(actionHash: ActionHash): Promise<Array<Link>> {
     return this.callZome('get_cancellations_for', actionHash);
   }
 
   getUndoneCancellationsFor(
     actionHash: ActionHash
-  ): Promise<Array<[CreateLink, Array<SignedActionHashed<DeleteLink>>]>> {
+  ): Promise<
+    Array<
+      [SignedActionHashed<CreateLink>, Array<SignedActionHashed<DeleteLink>>]
+    >
+  > {
     return this.callZome('get_undone_cancellations_for', actionHash);
   }
 

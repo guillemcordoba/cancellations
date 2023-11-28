@@ -117,27 +117,18 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
 }
 
 #[hdk_extern]
-pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<ActionHash>> {
-    let links = get_links(action_hash, LinkTypes::Cancellations, None)?;
-    let action_hashes: Vec<ActionHash> = links
-        .into_iter()
-        .filter_map(|link| link.target.into_action_hash())
-        .collect();
-    Ok(action_hashes)
+pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Link>> {
+    get_links(action_hash, LinkTypes::Cancellations, None)
 }
 
 #[hdk_extern]
 pub fn get_undone_cancellations_for(
     action_hash: ActionHash,
-) -> ExternResult<Vec<(CreateLink, Vec<SignedHashedAction>)>> {
+) -> ExternResult<Vec<(SignedActionHashed, Vec<SignedActionHashed>)>> {
     let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
     Ok(details
         .into_inner()
         .into_iter()
         .filter(|(_link, deletes)| deletes.len() > 0)
-        .filter_map(|(link, deletes)| match link.hashed.content {
-            Action::CreateLink(cl) => Some((cl, deletes)),
-            _ => None,
-        })
         .collect())
 }

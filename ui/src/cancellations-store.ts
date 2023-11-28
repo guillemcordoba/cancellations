@@ -1,9 +1,9 @@
 import {
-  deletedLinksTargetsStore,
+  deletedLinksStore,
   deletesForEntryStore,
   immutableEntryStore,
   latestVersionOfEntryStore,
-  liveLinksTargetsStore,
+  liveLinksStore,
   pipe,
 } from '@holochain-open-dev/stores';
 import { LazyHoloHashMap, slice } from '@holochain-open-dev/utils';
@@ -16,16 +16,20 @@ export class CancellationsStore {
 
   cancellationsFor = new LazyHoloHashMap((cancelledHash: ActionHash) => ({
     live: pipe(
-      liveLinksTargetsStore(
+      liveLinksStore(
         this.client,
         cancelledHash,
         () => this.client.getCancellationsFor(cancelledHash),
         'Cancellations'
       ),
-      hashes => slice(this.cancellations, hashes)
+      links =>
+        slice(
+          this.cancellations,
+          links.map(l => l.target)
+        )
     ),
     undone: pipe(
-      deletedLinksTargetsStore(
+      deletedLinksStore(
         this.client,
         cancelledHash,
         () => this.client.getUndoneCancellationsFor(cancelledHash),
@@ -34,7 +38,7 @@ export class CancellationsStore {
       linksDeleted =>
         slice(
           this.cancellations,
-          linksDeleted.map(([cl]) => cl.target_address)
+          linksDeleted.map(([cl]) => cl.hashed.content.target_address)
         )
     ),
   }));
