@@ -101,7 +101,7 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
 
     let cancellation = Cancellation::try_from(entry)?;
 
-    let links = get_links(cancellation.cancelled_hash, LinkTypes::Cancellations, None)?;
+    let links = get_links(GetLinksInputBuilder::try_new(cancellation.cancelled_hash, LinkTypes::Cancellations)?.build() )?;
 
     for link in links {
         if let Some(action_hash) = link.target.into_action_hash() {
@@ -118,7 +118,7 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
 
 #[hdk_extern]
 pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Link>> {
-    get_links(action_hash, LinkTypes::Cancellations, None)
+    get_links(GetLinksInputBuilder::try_new(action_hash, LinkTypes::Cancellations)?.build() )
 }
 
 #[hdk_extern]
