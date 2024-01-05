@@ -9,9 +9,7 @@ members = ["zomes/coordinator/*", "zomes/integrity/*"]
 resolver = "2"
 
 [workspace.dependencies]
-holochain = { version = "=0.2.2", default-features = false, features = [
-  "test_utils",
-] }
-hdk = "0.2"
-hdi = "0.3"
-serde = "1"
+hdi = "0.4.0-beta-dev.20"
+hdk = "0.3.0-beta-dev.24"
+holochain = "0.3.0-beta-dev.29"
+serde = "1.0.193"
