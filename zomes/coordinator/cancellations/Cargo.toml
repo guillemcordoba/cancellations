@@ -15,8 +15,8 @@ serde = { workspace = true }
 hc_zome_cancellations_integrity = { path = "../../integrity/cancellations", version = "0.0.1" }
 
 [dev-dependencies]
-fixt = "*"
+fixt = "0.3.0-beta-dev.2"
 futures = { version = "0.3.1", default-features = false }
 hdk = { workspace = true, features = ["encoding", "test_utils"] }
-holochain = { worskpace = true }
+holochain = { worskpace = true, features = ["test_utils"]}
 tokio = { version = "1.3", features = ["full"] }

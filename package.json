@@ -1,15 +1,13 @@
 {
   "name": "cancellations-dev",
   "private": true,
-  "workspaces": ["ui", "tests"],
   "scripts": {
-    "start": "AGENTS=2 npm run network",
-    "network": "hc s clean && npm run build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently \"npm start -w @holochain-open-dev/cancellations\" \"npm run local-services\" \"npm run launch\" \"holochain-playground\"",
-    "test": "npm run build:happ && cargo nextest run -j 1 && npm test -w tests",
+    "start": "AGENTS=2 pnpm network",
+    "network": "hc s clean && pnpm build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently \"pnpm -F @holochain-open-dev/cancellations start \" \"pnpm local-services\" \"npm run launch\" \"holochain-playground\"",
+    "test": "nix flake check -L && pnpm run build:happ && pnpm -F tests test",
     "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/cancellations.happ --ui-port $UI_PORT network --bootstrap http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
     "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
-    "build:happ": "npm run build:zomes && hc app pack workdir --recursive",
-    "build:zomes": "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
+    "build:happ": "nix build -L .#cancellations_test_happ.meta.debug -o workdir/cancellations_test.happ"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",

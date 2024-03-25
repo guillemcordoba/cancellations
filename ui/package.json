@@ -3,17 +3,21 @@
   "version": "0.4.0",
   "scripts": {
     "start": "vite --clearScreen false --port $UI_PORT",
-    "build": "npm run lint && tsc && npm run analyze -- --exclude dist",
+    "build": "npm run lint && tsc && npm run localize:build && npm run analyze -- --exclude dist",
     "lint": "eslint --ext .ts src && prettier \"src/**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --fix --ext .ts src && prettier \"src/**/*.ts\" --write --ignore-path .gitignore",
     "localize:extract": "lit-localize extract",
     "localize:build": "lit-localize build",
-    "analyze": "cem analyze --litelement"
+    "analyze": "cem analyze --litelement",
+    "prepare": "npm run build"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "locales"],
+  "files": [
+    "dist",
+    "locales"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holochain-open-dev/cancellations.git"
@@ -24,11 +28,11 @@
     "./locales/*": "./locales/*"
   },
   "dependencies": {
-    "@holochain/client": "^0.16.0",
-    "@holochain-open-dev/elements": "^0.8.2",
-    "@holochain-open-dev/profiles": "^0.17.1",
-    "@holochain-open-dev/stores": "^0.8.2",
-    "@holochain-open-dev/utils": "^0.16.2",
+    "@holochain/client": "^0.17.0-dev.7",
+    "@holochain-open-dev/elements": "^0.300.0-dev.0",
+    "@holochain-open-dev/profiles": "github:holochain-open-dev/profiles#5d5583e793e1f90bd445fe080cb10088127ee042",
+    "@holochain-open-dev/stores": "^0.300.0-dev.1",
+    "@holochain-open-dev/utils": "^0.300.0-dev.0",
     "@lit/context": "^1.0.0",
     "@lit/localize": "^0.12.0",
     "@mdi/js": "^7.2.0",

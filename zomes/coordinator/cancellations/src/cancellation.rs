@@ -72,7 +72,9 @@ pub fn update_cancellation(input: UpdateCancellationInput) -> ExternResult<Recor
     let record = get_latest_cancellation(input.previous_cancellation_hash.clone())?;
 
     let Some(entry) = record.entry.as_option() else {
-        return Err(wasm_error!(WasmErrorInner::Guest("Cancellation not found".to_string())));
+        return Err(wasm_error!(WasmErrorInner::Guest(
+            "Cancellation not found".to_string()
+        )));
     };
     let cancellation = Cancellation::try_from(entry)?;
 
@@ -96,12 +98,17 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
     let record = get_latest_cancellation(original_cancellation_hash.clone())?;
 
     let Some(entry) = record.entry.as_option() else {
-        return Err(wasm_error!(WasmErrorInner::Guest("Cancellation not found".to_string())));
+        return Err(wasm_error!(WasmErrorInner::Guest(
+            "Cancellation not found".to_string()
+        )));
     };
 
     let cancellation = Cancellation::try_from(entry)?;
 
-    let links = get_links(GetLinksInputBuilder::try_new(cancellation.cancelled_hash, LinkTypes::Cancellations)?.build() )?;
+    let links = get_links(
+        GetLinksInputBuilder::try_new(cancellation.cancelled_hash, LinkTypes::Cancellations)?
+            .build(),
+    )?;
 
     for link in links {
         if let Some(action_hash) = link.target.into_action_hash() {
@@ -118,14 +125,19 @@ pub fn undo_cancellation(original_cancellation_hash: ActionHash) -> ExternResult
 
 #[hdk_extern]
 pub fn get_cancellations_for(action_hash: ActionHash) -> ExternResult<Vec<Link>> {
-    get_links(GetLinksInputBuilder::try_new(action_hash, LinkTypes::Cancellations)?.build() )
+    get_links(GetLinksInputBuilder::try_new(action_hash, LinkTypes::Cancellations)?.build())
 }
 
 #[hdk_extern]
 pub fn get_undone_cancellations_for(
     action_hash: ActionHash,
 ) -> ExternResult<Vec<(SignedActionHashed, Vec<SignedActionHashed>)>> {
-    let details = get_link_details(action_hash, LinkTypes::Cancellations, None)?;
+    let details = get_link_details(
+        action_hash,
+        LinkTypes::Cancellations,
+        None,
+        GetOptions::default(),
+    )?;
     Ok(details
         .into_inner()
         .into_iter()

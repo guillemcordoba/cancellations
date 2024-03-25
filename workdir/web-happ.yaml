@@ -1,7 +1,0 @@
----
-manifest_version: "1"
-name: cancellations
-ui:
-  bundled: "../ui/dist.zip"
-happ_manifest:
-  bundled: "./cancellations.happ"

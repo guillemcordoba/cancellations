@@ -7,7 +7,7 @@ import { CancellationsStore } from '../../ui/src/cancellations-store.js';
 export async function setup(scenario: Scenario) {
   const testHappUrl =
     dirname(fileURLToPath(import.meta.url)) +
-    '/../../workdir/cancellations.happ';
+    '/../../workdir/cancellations_test.happ';
 
   // Add 2 players with the test hApp to the Scenario. The returned players
   // can be destructured.
